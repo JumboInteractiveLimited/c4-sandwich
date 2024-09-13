@@ -1,0 +1,41 @@
+
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/postgresql.puml
+!include DEVICONS/php.puml
+!include DEVICONS/react.puml
+!include DEVICONS2/apache.puml
+!include DEVICONS2/google.puml
+!include FONTAWESOME/users.puml
+
+LAYOUT_LEFT_RIGHT()
+
+Person(customer, "Customer", "People that want to buy sandwiches", "users")
+Person(manager, "Store Manager", "", "users")
+Person(national, "National Manager", "", "users")
+
+System_Boundary(system, "Online sandwich") {
+	System(frontend, "ReactJS Frontend", "reactjs", "react")
+	System(admin, "ReactJS Admin Portal", "reactjs", "react")
+	Container(backend, "Sandwich store backend", "php", "A monolithic php sandwich store", "php")
+	ContainerDb(db, "Database", "postgres", "Relational Database", "postgresql")
+}
+
+System_Ext(google, "Google Maps", "Provides maps and directions", "google")
+
+Rel(customer, frontend, "Orders from", "https")
+Rel(manager, admin, "Manages", "https")
+Rel(national, admin, "Manages", "https")
+
+Rel(frontend, backend, "Requests", "json/rest")
+Rel(admin, backend, "Requests", "json/rest")
+
+Rel(backend, db, "Queries", "sql")
+
+Rel_Right(frontend, google, "Embeds", "https")
+
+@enduml
